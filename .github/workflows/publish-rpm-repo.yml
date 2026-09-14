@@ -1,0 +1,40 @@
+name: Publish DNF Repository
+
+on:
+  push:
+    paths:
+      - 'pool/**'
+      - '*.rpm'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build-rpm:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Install createrepo_c
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y createrepo-c
+
+      - name: Generate DNF Repodata
+        run: |
+          # Ensure root level copies exist for backwards-compatibility
+          cp -vf pool/*.rpm . 2>/dev/null || true
+          createrepo_c --outputdir=. pool/
+
+      - name: Commit and push repodata
+        run: |
+          git config user.name "github-actions"
+          git config user.email "actions@github.com"
+          git add repodata/ *.rpm
+          git diff --staged --quiet || {
+            git commit -m "chore: auto-update DNF repodata [skip ci]"
+            git push origin main
+          }
