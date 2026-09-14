@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>WagonBox RPM / DNF Repository</title>
+</head>
+<body style="font-family: sans-serif; padding: 2rem; max-width: 700px; margin: auto;">
+  <h2>WagonBox RPM Repository</h2>
+  <p>Official DNF/YUM repository for RHEL, Rocky, AlmaLinux, and Fedora.</p>
+  <h3>Quick Setup:</h3>
+  <pre style="background: #f4f4f4; padding: 1rem; border-radius: 4px; overflow-x: auto;">sudo tee /etc/yum.repos.d/wagonbox.repo <<'REPOEOF'
+[wagonbox]
+name=WagonBox
+baseurl=https://sys64-os.github.io/wagonbox-rpm
+enabled=1
+gpgcheck=1
+gpgkey=https://sys64-os.github.io/wagonbox-key/wagonbox.gpg
+REPOEOF
+sudo dnf makecache && sudo dnf install wagonbox-core wagonbox-ui</pre>
+  <p><a href="pool/">Browse Package Pool</a></p>
+</body>
+</html>
